@@ -1,17 +1,42 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
-import WindowFrame from '@renderer/window/WindowFrame';
-import Application from '@components/Application';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import Auth from './views/auth';
+import Workspace from './views/workspace';
+import { ConfigProvider } from 'antd/es';
 
-// Say something
 console.log('[ERWT] : Renderer execution started');
 
-// Application to Render
-const app = (
-  <WindowFrame title='ERWT Boilerplate' platform='windows'>
-    <Application />
-  </WindowFrame>
+const App = () => (
+  <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: '#505050',
+        colorPrimaryBg: '#f5f5f5',
+        colorPrimaryBgHover: '#e8e8e8',
+        colorPrimaryBorder: '#d9d9d9',
+        colorPrimaryBorderHover: '#505050',
+        colorPrimaryHover: '#666666',
+        colorPrimaryActive: '#404040',
+        colorPrimaryTextHover: '#666666',
+        colorPrimaryText: '#505050',
+        colorPrimaryTextActive: '#404040',
+      },
+    }}
+  >
+    <Router>
+      <Routes>
+        <Route path='/' element={<Auth />} />
+        <Route path='/workspace' element={<Workspace />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
+      </Routes>
+    </Router>
+  </ConfigProvider>
 );
 
-// Render application in DOM
-createRoot(document.getElementById('app')).render(app);
+createRoot(document.getElementById('app')).render(<App />);

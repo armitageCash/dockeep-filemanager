@@ -32,11 +32,16 @@ module.exports = [
   },
   {
     // SCSS (SASS) Loader
-    test: /\.s[ac]ss$/i,
+    test: /\.scss$/,
     use: [
-      { loader: 'style-loader' },
-      { loader: 'css-loader' },
-      { loader: 'sass-loader' },
+      'style-loader',
+      'css-loader',
+      {
+        loader: 'sass-loader',
+        options: {
+          implementation: require('sass'),
+        },
+      },
     ],
   },
   {

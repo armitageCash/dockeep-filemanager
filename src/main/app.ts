@@ -1,6 +1,24 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import { createAppWindow } from './appWindow';
 
+app.whenReady().then(() => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; 
+           img-src * data: blob:; 
+           script-src * 'unsafe-inline' 'unsafe-eval'; 
+           style-src * 'unsafe-inline'; 
+           font-src * data:; 
+           media-src * blob:; 
+           frame-src *;`,
+        ],
+      },
+    });
+  });
+});
 /** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
 if (require('electron-squirrel-startup')) {
   app.quit();

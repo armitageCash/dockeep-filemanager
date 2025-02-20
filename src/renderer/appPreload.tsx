@@ -1,35 +1,25 @@
 import '@main/window/windowPreload';
+import { contextBridge, ipcRenderer } from 'electron';
 
-// Say something
 console.log('[ERWT] : Preload execution started');
 
-// Get versions
+contextBridge.exposeInMainWorld('Dockeep', {
+  FileManager: {
+    readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
+  },
+  selectFolder: () => ipcRenderer.invoke('dialog:openDirectory'),
+  watchDirectory: (dirPath: string) =>
+    ipcRenderer.send('watch-directory', dirPath),
+  stopWatching: () => ipcRenderer.send('stop-watching'),
+  onDirectoryChange: (
+    callback: (event: { type: string; filePath: string }) => void,
+  ) => {
+    ipcRenderer.on('directory-changed', (_event, data) => callback(data));
+  },
+});
+
 window.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('app');
   const { env } = process;
   const versions: Record<string, unknown> = {};
-
-  // ERWT Package version
-  versions['erwt'] = env['npm_package_version'];
-  versions['license'] = env['npm_package_license'];
-
-  // Process versions
-  for (const type of ['chrome', 'node', 'electron']) {
-    versions[type] = process.versions[type].replace('+', '');
-  }
-
-  // NPM deps versions
-  for (const type of ['react']) {
-    const v = env['npm_package_dependencies_' + type];
-    if (v) versions[type] = v.replace('^', '');
-  }
-
-  // NPM @dev deps versions
-  for (const type of ['webpack', 'typescript']) {
-    const v = env['npm_package_devDependencies_' + type];
-    if (v) versions[type] = v.replace('^', '');
-  }
-
-  // Set versions to app data
-  app.setAttribute('data-versions', JSON.stringify(versions));
 });

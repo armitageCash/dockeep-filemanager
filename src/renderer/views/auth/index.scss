@@ -1,0 +1,31 @@
+.auth-main{
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+    .logo{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        width: auto;
+        height: auto;
+        margin-bottom: 20px;
+        background-color: #505050;
+        padding: 4px;
+        box-sizing: border-box;
+
+        img{
+            width: 60px;
+            height: 60px;
+        }
+     }
+}
+
+.text-center{
+    text-align: center;
+}
